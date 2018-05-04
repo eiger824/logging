@@ -2,6 +2,7 @@
 
 int main()
 {
+    log_set(1);
 	log_info("Hello there!");
 	log_info("Age: %d", 24);
 	log_info("Age %s");

@@ -1,11 +1,13 @@
 #include <string.h>
 #include <time.h>
+#include <pthread.h>
 #include <sys/time.h>
 
 #include "log.h"
 
 static struct   timeval time_before, time_after, time_result;
 static bool     g_enabled = false;
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void log_enable(bool enable)
 {
@@ -17,6 +19,7 @@ void print(unsigned level,       /* level: ERROR (stderr) / INFO (stdout) */
         unsigned line,        /* line: The current line where the logging line is */
         const char* msg, ...) /* msg: Formated message with following (variadic) args */
 {
+    pthread_mutex_lock(&mutex);
     if ( (g_enabled && level) || !level )  /* Log to stdout if verbose enabled ** or ** if logging to stderr ALWAYS */
     {
         //update the time struct
@@ -61,4 +64,5 @@ void print(unsigned level,       /* level: ERROR (stderr) / INFO (stdout) */
         //and update time struct
         memcpy(&time_before, &time_after, sizeof(time_before));
     }
+    pthread_mutex_unlock(&mutex);
 }
