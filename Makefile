@@ -1,8 +1,16 @@
-test: main.o log.o
-	gcc -Wall -Wextra -Wpedantic --std=c11 -lpthread $^ -o $@
+CFLAGS  := -c -Wall -Wextra -Wpedantic -std=c17
+LDFLAGS := -Wall -Wextra -Wpedantic -std=c17 -pthread
+
+all: test
+
+test: log.o main.o
+	gcc  $^ -o $@ $(LDFLAGS)
+
+%.o: %.c %.h
+	gcc $< -o $@ $(CFLAGS)
 
 %.o: %.c
-	gcc -c -Wall -Wextra -Wpedantic --std=c11 $^ -o $@ 
+	gcc $< -o $@ $(CFLAGS)
 
 clean:
-	rm -f print *~
+	rm -f test *.o *~
