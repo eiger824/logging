@@ -12,7 +12,7 @@ void* thread_fn(void* arg) {
     thread_data_t* data = arg;
 
     for (unsigned i = 0; i < 10; ++i) {
-        log_debug("[Thread=%i] Debugging a loop at %i", data->id, i);
+        log_debug("[Thread=%zu] Debugging a loop at %i", data->id, i);
     }
     return NULL;
 }
@@ -29,6 +29,7 @@ int main()
 
     for (size_t i =0; i < ARRAY_SIZE(threads); ++i) {
         log_info("Initializing thread %zu", i);
+        datas[i].id = i;
         pthread_create(&threads[i], NULL, thread_fn, &datas[i]);
     }
     for (size_t i =0; i < ARRAY_SIZE(threads); ++i) {
